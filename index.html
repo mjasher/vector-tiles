@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Local Government Areas </title>
+        <title>ABS region vector tiles</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -36,7 +36,7 @@
 // ----------------------------------
 // leaflet base map
 // ----------------------------------
-
+// I host with sudo jekyll serve --watch
 
             var map = new L.Map('mapElement', {
                 center: [-35.1663756, 149.2531554],  
@@ -86,35 +86,74 @@
                 popupString += '</div>';
                 return popupString;
             }
+            var onEachFeature = function (feature, layer) {
+                // layer.bindPopup(makePopup(feature));
+                if (!(layer instanceof L.Point)) {
+                    layer.on('mouseover', function () {
+                        layer.setStyle(hoverStyle);
+                        if(layer.bindPopup) layer.bindPopup(makePopup(feature));
+                        // layer.openPopup();
+                    });
+                    layer.on('mouseout', function () {
+                        layer.setStyle(style(feature));
+                        if(layer.unbindPopup) layer.unbindPopup();
+                        // layer.closePopup();
+                    });
+                }
+            }
+
             // made with "Tilestache"
             // var geojsonURL = 'http://urbananalyzer.appspot.com/sa2/{z}/{x}/{y}.json';
-            // can also be .topojson
-            var geojsonURL = 'stache/lga-psql/{z}/{x}/{y}.json';
-            var geojsonTileLayer = new L.TileLayer.GeoJSON(geojsonURL, {
+            // can also be .topojson, but we need to enable topojson tilelayer https://github.com/mapbox/leaflet-omnivore
+            // var geojsonURL = 'stache/lga-psql/{z}/{x}/{y}.json';
+            var lgaGeojsonTileLayer = new L.TileLayer.GeoJSON('stache/lga-psql/{z}/{x}/{y}.json', {
                     clipTiles: true,
                     unique: function (feature) {
                         return feature.id; 
                     }
                 }, {
                     style: style,
-                    onEachFeature: function (feature, layer) {
-                        // layer.bindPopup(makePopup(feature));
-                        if (!(layer instanceof L.Point)) {
-                            layer.on('mouseover', function () {
-                                layer.setStyle(hoverStyle);
-                                if(layer.bindPopup) layer.bindPopup(makePopup(feature));
-                                // layer.openPopup();
-                            });
-                            layer.on('mouseout', function () {
-                                layer.setStyle(style(feature));
-                                if(layer.unbindPopup) layer.unbindPopup();
-                                // layer.closePopup();
-                            });
-                        }
-                    }
+                    onEachFeature: onEachFeature
                 }
             );
-            map.addLayer(geojsonTileLayer);
+            var sa2GeojsonTileLayer = new L.TileLayer.GeoJSON('stache/sa2-psql/{z}/{x}/{y}.json', {
+                    clipTiles: true,
+                    unique: function (feature) {
+                        return feature.id; 
+                    }
+                }, {
+                    style: style,
+                    onEachFeature: onEachFeature
+                }
+            );
+            var sa3GeojsonTileLayer = new L.TileLayer.GeoJSON('stache/sa3-psql/{z}/{x}/{y}.json', {
+                    clipTiles: true,
+                    unique: function (feature) {
+                        return feature.id; 
+                    }
+                }, {
+                    style: style,
+                    onEachFeature: onEachFeature
+                }
+            );
+            var sa4GeojsonTileLayer = new L.TileLayer.GeoJSON('stache/sa4-psql/{z}/{x}/{y}.json', {
+                    clipTiles: true,
+                    unique: function (feature) {
+                        return feature.id; 
+                    }
+                }, {
+                    style: style,
+                    onEachFeature: onEachFeature
+                }
+            );
+
+            L.control.layers({
+                "lga": lgaGeojsonTileLayer,
+                "sa2": sa2GeojsonTileLayer,
+                "sa3": sa3GeojsonTileLayer,
+                "sa4": sa4GeojsonTileLayer
+            }).addTo(map);
+            // map.addLayer(geojsonTileLayer);
 
         </script>
 

@@ -34,9 +34,9 @@ Go to http://www.mapshaper.org/ to simplify shapefile, 10% good starting point.
 Use Douglas-Peucker, Visvalingam / effective area or Visvalingam / weighted area.
 Download simplified shapefile and place in folder with the unsimplified .cpg, .prj, and .dbf .
 ```
-mapshaper counties.shp -simplify 10% -o output/counties_simple.shp
-ogr2ogr -f 'ESRI Shapefile' LGA_2014_AUST_900913_simp.shp LGA_2014_AUST.shp -t_srs EPSG:900913
-shp2pgsql -s 900913 LGA_2014_AUST_900913_simp.shp lga_simp | psql
+mapshaper LGA_2014_AUST.shp -simplify 10% -o LGA_2014_AUST_900913_simp.shp
+# ogr2ogr -f 'ESRI Shapefile' LGA_2014_AUST_900913_simp.shp LGA_2014_AUST.shp -t_srs EPSG:900913
+# shp2pgsql -s 900913 LGA_2014_AUST_900913_simp.shp lga_simp | psql
 ```
 It seems like Tilestache simplifies for you.
 
@@ -60,8 +60,7 @@ shp2pgsql -s 900913 LGA_2014_AUST_900913.shp lga | psql
 
 Use Tilestache to create tiles
 ------------------------------
-Create a config file like topojson.cfg
-test your server
+Create a config file like topojson.cfg and test your server
 ```
 tilestache-server.py  -c topojson.cfg
 ```
@@ -76,6 +75,14 @@ Front end
 The demo (index.html) uses [leaflet](http://leafletjs.com/) and [Leaflet GeoJSON Tile Layer](https://github.com/glenrobertson/leaflet-tilelayer-geojson/)
 
 
+ASGS ABS databases
+---------------------
+ Download http://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/1270.0.55.001July%202011?OpenDocument . Unzip and change into directory
 
+ ```
+ ogr2ogr -f 'ESRI Shapefile' SA2_2011_AUST_900913.shp SA2_2011_AUST.shp -t_srs EPSG:900913
+ shp2pgsql -s 900913 SA2_2011_AUST_900913.shp sa2 | psql
+ tilestache-seed.py --config topojson.cfg --layer sa2-psql --bbox -43.575 112.925 -10.075 153.575 --extension json 5 6 7 8 9 10
+```
 
 
