@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>National Regional Profile </title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="js/leaflet-0.7.3.css">
+
+        <style>
+            html,body,#mapElement{
+                padding: 0;
+                margin: 0;
+                height: 100%;
+                width: 100%;
+            }
+   
+
+        </style>
+    </head>
+    <body>
+  
+        <div id="mapElement" ></div>
+
+        <script src="js/leaflet-0.7.3.js"></script>
+        <script src="js/TileLayer.GeoJSON.js"></script>
+
+
+        <script>
+
+// ----------------------------------
+// leaflet base map
+// ----------------------------------
+
+
+            var map = new L.Map('mapElement', {
+                center: [-35.1663756, 149.2531554],  
+                zoom: 8, // start zoom
+                minZoom: 5,
+                maxZoom: 10,
+            });
+
+            var baseLayer = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; toolserver.org',
+            }).addTo(map);
+
+
+// ----------------------------------
+// leaflet geojson tilelayer
+// ----------------------------------
+
+            var style = function(feature){
+                var fillColor = "#00D";
+                // if (geoMap) fillColor = choroplethColor(feature);
+                return {
+                    "clickable": true,
+                    "color": "#00D",
+                    "fillColor": fillColor, //"#00D"
+                    "weight": 1.0,
+                    "opacity": 0.3,
+                    "fillOpacity": 0.7
+                }
+            }
+            var hoverStyle = {
+                "fillOpacity": 0.5
+            };
+
+            var makePopup = function(feature){
+                var popupString = '<div class="popup">';
+                if (feature.properties) {
+                    for (var k in feature.properties) {
+                        var v = feature.properties[k];
+                        popupString += k + ': ' + v + '<br />';
+                    }
+                    // if (geoMap){
+                    //     geoMap.get(feature.id).values().forEach(function(v){
+                    //         popupString += v[0].year + ': ' + v[0].value + '<br />';
+                    //     });
+                    // }
+                }
+                popupString += '</div>';
+                return popupString;
+            }
+            // made with "Tilestache"
+            // var geojsonURL = 'http://urbananalyzer.appspot.com/sa2/{z}/{x}/{y}.json';
+            // can also be .topojson
+            var geojsonURL = 'stache/lga-psql/{z}/{x}/{y}.json';
+            var geojsonTileLayer = new L.TileLayer.GeoJSON(geojsonURL, {
+                    clipTiles: true,
+                    unique: function (feature) {
+                        return feature.id; 
+                    }
+                }, {
+                    style: style,
+                    onEachFeature: function (feature, layer) {
+                        // layer.bindPopup(makePopup(feature));
+                        if (!(layer instanceof L.Point)) {
+                            layer.on('mouseover', function () {
+                                layer.setStyle(hoverStyle);
+                                if(layer.bindPopup) layer.bindPopup(makePopup(feature));
+                                // layer.openPopup();
+                            });
+                            layer.on('mouseout', function () {
+                                layer.setStyle(style(feature));
+                                if(layer.unbindPopup) layer.unbindPopup();
+                                // layer.closePopup();
+                            });
+                        }
+                    }
+                }
+            );
+            map.addLayer(geojsonTileLayer);
+
+        </script>
+
+    </body>
+</html>

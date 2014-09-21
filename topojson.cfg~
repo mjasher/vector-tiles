@@ -1,0 +1,27 @@
+{
+    "cache": {
+        "name": "Disk",
+        "path": "/home/mikey/Downloads/1270055003_lga_2014_aust_shape/stache",
+        "dirs": "portable",
+        "gzip": [] 
+    },
+    "layers": {
+         "lga-psql": {
+            "allowed origin": "*",
+            "provider": {
+                "class": "TileStache.Goodies.VecTiles:Provider",
+                "kwargs": {
+                    "dbinfo": {
+                        "host": "localhost",
+                        "user": "mikey",
+                        "database": "mikey",
+                        "password": "mikey"
+                    },
+                    "queries": [
+                        "SELECT lga_code14, geom AS __geometry__ FROM lga_simp"
+                    ]
+                }
+            }
+        }
+    }
+}
