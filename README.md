@@ -5,10 +5,10 @@ It'll be easiest in Ubunutu. If you don't have a server, like me, you can just c
 
 Install depenedencies
 -----------------------
-*qgis http://www.qgis.org
-*postgis http://trac.osgeo.org/postgis/wiki/UsersWikiPostGIS21UbuntuPGSQL93Apt
-*shapely http://toblerity.org/shapely/
-*tilestache http://tilestache.org/
+* qgis http://www.qgis.org
+* postgis http://trac.osgeo.org/postgis/wiki/UsersWikiPostGIS21UbuntuPGSQL93Apt
+* shapely http://toblerity.org/shapely/
+* tilestache http://tilestache.org/
 
 
 Set up PostgreSQL
