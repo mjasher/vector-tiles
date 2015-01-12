@@ -23,7 +23,7 @@ sudo -u postgres psql postgres
 ```
 Download your source data
 --------------------------
-The demo uses an ESRI shapefile of the ABS LGAs
+The demo uses an ESRI shapefile of the ABS LGAs.
 Local Government Areas (LGAs) are an ABS approximation of officially gazetted LGAs as defined by each State and Territory (S/T) local government departments.
 They generally represent administrative regions and are approximated by Mesh Block (MB), Statistical Area Level 1 (SA1) or Statistical Area Level 2 (SA2).
 http://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/1270.0.55.003July,%202012?OpenDocument
